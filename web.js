@@ -15,8 +15,6 @@ app.get("/photos/:since", function(req, res) {
   files.forEach(function(file) {
     var stat = fs.statSync(photoDir + file);
     var mtime = stat.mtime.getTime();
-    console.log([file, mtime]);
-    console.log(since);
     if ([".png", ".jpg"].indexOf(path.extname(file).toLowerCase()) === -1) {
       return;
     }

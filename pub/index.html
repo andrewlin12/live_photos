@@ -3,12 +3,21 @@
   <script src="jquery.min.js"></script>
   <script src="global.js"></script>
   <style>
+    body {
+      background-color: #222;
+    }
+
     .main {
+      height: 100%;
+      overflow: hidden;
+      position:relative;
       text-align:center;
+      width: 100%;
     }
 
     .main img {
-      max-height: 100%;
+      opacity: 0;
+      position: absolute;
     }
   </style>
 </head>
