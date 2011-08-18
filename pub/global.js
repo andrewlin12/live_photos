@@ -12,34 +12,41 @@ $(function() {
       return;
     }
 
-    var nextImage = photoQueue.shift();
-    nextImage.css("width", "").css("height", "");
-    var w = nextImage.width();
-    var h = nextImage.height();
-    var targetHeight = $(window).height() - 24;
-    nextImage.height(targetHeight);
-    nextImage.css("top", 
-      Math.round((targetHeight - nextImage.height()) / 2) + "px");
-    nextImage.css("left", 
-      Math.round(($(window).width() - nextImage.width()) / 2) + "px");      
+    var nextImageSrc = photoQueue.shift();
+    var nextImage = $("<img />");
+    $(".main").prepend(nextImage);
+    nextImage.load(function() {
+      var w = nextImage.width();
+      var h = nextImage.height();
+      var targetHeight = $(window).height() - 24;
+      nextImage.height(targetHeight);
+      nextImage.css("top", 
+        Math.round((targetHeight - nextImage.height()) / 2) + "px");
+      nextImage.css("left", 
+        Math.round(($(window).width() - nextImage.width()) / 2) + "px");      
     
-    var fadeIn = function() {
-      nextImage.animate({
-        opacity: 1
-      }, 2000, function() {
-        currentImage = nextImage;
-      });
-    };
+      var fadeIn = function() {
+        nextImage.animate({
+          opacity: 1
+        }, 2000, function() {
+          currentImage = nextImage;
+        });
+      };
 
-    if (currentImage) {
-      currentImage.stop();
-      currentImage.animate({
-        opacity: 0
-      }, 2000, fadeIn); 
-    }
-    else {
-      fadeIn();
-    }
+      if (currentImage) {
+        currentImage.stop();
+        currentImage.animate({
+          opacity: 0
+        }, 2000, function() {
+          fadeIn();
+          currentImage.remove();
+        }); 
+      }
+      else {
+        fadeIn();
+      }
+    });
+    nextImage.attr("src", nextImageSrc + "?a=" + (new Date()).getTime());
   };
 
   var getNewPhotos = function() {
@@ -48,12 +55,10 @@ $(function() {
         return a.mtime - b.mtime;
       });
       $.each(data, function(i, v) {
-        var img = $("<img src='/" + v.name + "?a=1' />");
-        $(".main").prepend(img);
-        since = Math.max(v.mtime, since);
+       since = Math.max(v.mtime, since);
 
-        photoQueue.unshift(img);
-        fullQueue.push(img);
+        photoQueue.unshift(v.name);
+        fullQueue.push(v.name);
       });
     });
   };

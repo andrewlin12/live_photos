@@ -1,2 +1,3 @@
 pub/photos
 node_modules
+mogrify_history.json
