@@ -1,0 +1,12 @@
+Requires:
+- NodeJS
+- npm
+- express
+
+Setup:
+- mkdir pub/photos
+
+Run:
+- node web.js
+- go to http://localhost:9579/
+- copy .jpg or .png files into pub/photos

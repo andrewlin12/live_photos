@@ -22,17 +22,24 @@ $(function() {
       Math.round((targetHeight - nextImage.height()) / 2) + "px");
     nextImage.css("left", 
       Math.round(($(window).width() - nextImage.width()) / 2) + "px");      
+    
+    var fadeIn = function() {
+      nextImage.animate({
+        opacity: 1
+      }, 2000, function() {
+        currentImage = nextImage;
+      });
+    };
+
     if (currentImage) {
+      currentImage.stop();
       currentImage.animate({
         opacity: 0
-      }, 2000);
+      }, 2000, fadeIn); 
     }
-
-    nextImage.animate({
-      opacity: 1
-    }, 2000, function() {
-      currentImage = nextImage;
-    });
+    else {
+      fadeIn();
+    }
   };
 
   var getNewPhotos = function() {
@@ -41,7 +48,7 @@ $(function() {
         return a.mtime - b.mtime;
       });
       $.each(data, function(i, v) {
-        var img = $("<img src='/photos/" + v.name + "' />");
+        var img = $("<img src='/" + v.name + "?a=1' />");
         $(".main").prepend(img);
         since = Math.max(v.mtime, since);
 
@@ -52,7 +59,7 @@ $(function() {
   };
 
   setInterval(getNewPhotos, 10000);
-  setInterval(showNextPhoto, 5000);
+  setInterval(showNextPhoto, 10000);
   getNewPhotos();
   showNextPhoto();
 });
