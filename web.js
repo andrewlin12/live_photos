@@ -25,7 +25,7 @@ app.get("/photos/:since", function(req, res) {
     }
 
     var stat = fs.statSync(photoDir + file);
-    if (stat.mtime.getTime() > since) {
+    if (stat.ctime.getTime() > since) {
       filtered.push(file);
     }
   });
@@ -38,12 +38,14 @@ app.get("/photos/:since", function(req, res) {
       var stat = fs.statSync(photoDir + file);
       goodImages.push({
         name: file,
-        mtime: stat.ctime.getTime()
+        ctime: stat.ctime.getTime()
       });
     }
 
+    console.log([fileCount, filtered.length]);
     if (fileCount === filtered.length) {
       res.send(goodImages);
+      console.log("Done sending");
     }
   }
 
@@ -85,3 +87,7 @@ app.get("/photos/:since", function(req, res) {
 });
 
 app.listen(9579);
+
+process.on("uncaughtException", function() {
+  console.log(arguments);
+});
